@@ -40,6 +40,15 @@ app.get(`/api/getUpdates`, (req, res) => {
     .get("updates")
     .orderBy("sent_at", "desc")
     .slice(length, (length + 10))
+    .map((update) => {
+      return {
+        ...update,
+        analytics: db.lodash
+          .get("updates-analytics")
+          .find((x) => x.update_id === update.id)
+          .value()
+      }
+    })
     .value();
 
   res.json(updates);
