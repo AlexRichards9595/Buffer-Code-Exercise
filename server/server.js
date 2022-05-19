@@ -35,11 +35,11 @@ app.use("/api", (req, res, next) => {
 });
 
 app.get(`/api/getUpdates`, (req, res) => {
-  const length = parseInt(req.query.length)
+  const loaded = parseInt(req.query.loaded)
   const updates = db.lodash
     .get("updates")
     .orderBy("sent_at", "desc")
-    .slice(length, (length + 10))
+    .slice(loaded, (loaded + 10))
     .map((update) => {
       return {
         ...update,
