@@ -11,6 +11,7 @@ import {
   getDayStartFromUnixTimestamp,
   getTimestampSeriesArray,
 } from "./lib/dates.js";
+import * as url from "url";
 
 const app = express();
 const PORT = 8080;
@@ -33,11 +34,12 @@ app.use("/api", (req, res, next) => {
   next();
 });
 
-app.get("/api/getUpdates", (req, res) => {
+app.get(`/api/getUpdates`, (req, res) => {
+  const length = parseInt(req.query.length)
   const updates = db.lodash
     .get("updates")
     .orderBy("sent_at", "desc")
-    .slice(0, 10)
+    .slice(length, (length + 10))
     .value();
 
   res.json(updates);

@@ -38,9 +38,12 @@ class Store {
   dispatch(action) {
     switch (action.type) {
       case actions.LOAD_UPDATES:
-        Api.get("getUpdates")
+        const length = this.getState("updates") ? this.getState("updates").length : 0;
+        Api.get("getUpdates", {length})
           .then((updates) => {
-            this.setState("updates", updates);
+            this.getState("updates") ?
+              this.setState("updates", this.getState("updates").concat(updates)) :
+              this.setState("updates", updates)
           })
           .catch(this.handleError);
         break;

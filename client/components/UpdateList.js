@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Update from "./Update";
+import actions from "../actions";
 
 class UpdateList extends Component {
   render() {
@@ -11,6 +12,7 @@ class UpdateList extends Component {
         {this.props.updates.map((update, idx) => (
           <Update {...update} key={idx} />
         ))}
+        <button onClick={() => this.props.dispatch({ type: actions.LOAD_UPDATES })}>Load More</button>
       </div>
     );
     return;
