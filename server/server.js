@@ -54,6 +54,45 @@ app.get(`/api/getUpdates`, (req, res) => {
   res.json(updates);
 });
 
+app.get(`/api/getAnalyticsTimeseries`, (req, res) => {
+  const updateAnalytics = db.lodash
+      .get("updates")
+      .map((update) => {
+        return {
+          created_at: update.created_at,
+          day: new Date(new Date(update.created_at*1000).toISOString().split("T")[0]).getTime(),
+          ...db.lodash
+              .get("updates-analytics")
+              .find((x) => x.update_id === update.id)
+              .value()
+        }
+        }).value();
+
+    const aggregates = updateAnalytics.reduce((aggregateArray, update) => {
+        const aggregatedDay = aggregateArray.find((a) => a.day === update.day);
+
+        if(aggregatedDay)
+            aggregateArray[aggregatedDay] = {
+                timestamp: update.day/1000,
+                retweets: update.retweets + aggregatedDay.retweets,
+                favorites: update.favorites + aggregatedDay.favorites,
+                clicks: update.clicks + aggregatedDay.clicks,
+            }
+        else {
+                aggregateArray.push(
+                    {
+                        timestamp: update.day/1000,
+                        retweets: update.retweets,
+                        favorites: update.favorites,
+                        clicks: update.clicks,
+                    })
+            }
+        return aggregateArray;
+    }, [])
+
+  res.json(aggregates);
+});
+
 // Serve static assets in the /public directory
 const pathToStatic = new URL("../public", import.meta.url).pathname;
 app.use(
