@@ -1,7 +1,10 @@
-import React, { Component } from "react";
+import React, {useEffect, useState} from "react";
 
-class AnalyticsSummary extends Component {
-  getAnalyticsSummaryData(updates = []) {
+const AnalyticsSummary = props => {
+  const [data, setData] = useState({});
+  const [items, setItems] = useState([]);
+
+  const getAnalyticsSummaryData= (updates = []) => {
     return updates.reduce(
       (data, update) => {
         return {
@@ -23,14 +26,14 @@ class AnalyticsSummary extends Component {
     );
   }
 
-  render() {
-    if (!this.props.updates) {
-      return <div className="analytics-summary">Loading...</div>;
-    }
-    const data = this.getAnalyticsSummaryData(this.props.updates);
-    const items = [
+  useEffect(() => {
+    setData(getAnalyticsSummaryData(props.updates));
+  }, [props]);
+
+  useEffect(() => {
+    setItems([
       {
-        value: this.props.updates.length,
+        value: 2,
         name: "Posts",
       },
       {
@@ -45,7 +48,13 @@ class AnalyticsSummary extends Component {
         value: data.clicks,
         name: "Clicks",
       },
-    ];
+    ]);
+  }, [data]);
+
+    if (!props.updates) {
+      return <div className="analytics-summary">Loading...</div>;
+    }
+
     return (
       <div className="analytics-summary">
         {items.map((item, idx) => (
@@ -56,8 +65,6 @@ class AnalyticsSummary extends Component {
         ))}
       </div>
     );
-    return;
   }
-}
 
 export default AnalyticsSummary;
