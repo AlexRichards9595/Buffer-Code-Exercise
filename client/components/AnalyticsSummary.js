@@ -33,7 +33,7 @@ const AnalyticsSummary = props => {
   useEffect(() => {
     setItems([
       {
-        value: props.updates.length,
+        value: props.updates?.length,
         name: "Posts",
       },
       {
