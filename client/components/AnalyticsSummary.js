@@ -33,7 +33,7 @@ const AnalyticsSummary = props => {
   useEffect(() => {
     setItems([
       {
-        value: 2,
+        value: props.updates.length,
         name: "Posts",
       },
       {
@@ -49,7 +49,7 @@ const AnalyticsSummary = props => {
         name: "Clicks",
       },
     ]);
-  }, [data]);
+  }, [data, props]);
 
     if (!props.updates) {
       return <div className="analytics-summary">Loading...</div>;
