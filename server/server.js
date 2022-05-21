@@ -43,7 +43,7 @@ app.get(`/api/getUpdates`, (req, res) => {
     .map((update) => {
       return {
         ...update,
-        analytics: db.lodash
+        statistics: db.lodash
           .get("updates-analytics")
           .find((x) => x.update_id === update.id)
           .value()
@@ -71,14 +71,14 @@ app.get(`/api/getAnalyticsTimeseries`, (req, res) => {
     const aggregates = updateAnalytics.reduce((aggregateArray, update) => {
         const aggregatedDay = aggregateArray.find((a) => a.day === update.day);
 
-        if(aggregatedDay)
+        if (aggregatedDay) {
             aggregateArray[aggregatedDay] = {
-                timestamp: update.day/1000,
+                timestamp: update.day / 1000,
                 retweets: update.retweets + aggregatedDay.retweets,
                 favorites: update.favorites + aggregatedDay.favorites,
                 clicks: update.clicks + aggregatedDay.clicks,
             }
-        else {
+        } else {
                 aggregateArray.push(
                     {
                         timestamp: update.day/1000,
@@ -88,7 +88,7 @@ app.get(`/api/getAnalyticsTimeseries`, (req, res) => {
                     })
             }
         return aggregateArray;
-    }, [])
+    }, []);
 
   res.json(aggregates);
 });
